@@ -5,7 +5,7 @@
   
     async function predict() {
       try {
-        const response = await fetch('http://localhost:8000/predict', {
+        const response = await fetch('https://climate-sentiment.onrender.com/predict', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
