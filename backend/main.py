@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from transformers import BertTokenizer, BertForSequenceClassification
@@ -21,18 +21,27 @@ app.add_middleware(
 class TextInput(BaseModel):
     text: str
 
-tokenizer = BertTokenizer.from_pretrained("./model")
-model = BertForSequenceClassification.from_pretrained("./model", use_safetensors=True)
-model.eval()
-
+# Global variables for the tokenizer and model
+tokenizer = None
+model = None
 label_mapping = {
     0: "Risk",       
     1: "Neutral",     
     2: "Opportunity", 
 }
 
+@app.on_event("startup")
+async def load_model():
+    global tokenizer, model
+    tokenizer = BertTokenizer.from_pretrained("./model")
+    model = BertForSequenceClassification.from_pretrained("./model", use_safetensors=True)
+    model.eval()  # Put the model in evaluation mode
+
 @app.post("/predict")
 async def predict(input: TextInput):
+    if tokenizer is None or model is None:
+        raise HTTPException(status_code=500, detail="Model not loaded yet")
+
     inputs = tokenizer(input.text, return_tensors="pt", truncation=True, padding=True)
 
     with torch.no_grad():
