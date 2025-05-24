@@ -5,7 +5,7 @@
   
     async function predict() {
       try {
-        const response = await fetch(import.meta.env.VITE_API_URL, { //change to http://localhost:8000/predict if cloned locally
+        const response = await fetch('https://climate-sentiment.onrender.com/predict', { //change to http://localhost:8000/predict if cloned locally
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
