@@ -52,13 +52,14 @@ async def predict(input: TextInput):
         vector = svm_vectorizer.transform([input.text])
         pred = svm_model.predict(vector)[0]
         confidence = np.max(svm_model.decision_function(vector))
-        label = label_mapping.get(prediction, f"LABEL_{pred}")
+        prediction = int(pred)
+        label = label_mapping.get(prediction, f"LABEL_{prediction}")
         return {
             "model": "svm",
             "prediction": label,
             "confidence": round(confidence, 2)
         }
-    
+
     elif model_choice == "bert":
         with torch.no_grad():
             outputs = model(**inputs)
