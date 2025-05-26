@@ -1,7 +1,19 @@
 <script>
     let text = '';
+    let model = 'bert';
     let prediction = null;
     let confidence = null; 
+
+    function predictSVM(){
+      model = 'svm';
+      predict();
+    }
+
+    function predictBert(){
+      model = 'bert';
+      predict();
+    }
+  
   
     async function predict() {
       try {
@@ -10,7 +22,7 @@
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ text }),
+          body: JSON.stringify({ text , model}),
         });
   
         if (response.ok) {
@@ -39,7 +51,11 @@
         bind:value={text}
         placeholder="Enter text here..."
       />
-      <button on:click={predict}>Predict</button>
+      
+      <div class="button-row">
+        <button on:click={predictSVM}>Predict with SVM</button>
+        <button on:click={predictBert}>Predict with Bert</button>
+      </div>
   
       {#if prediction !== null && confidence !== null}
         <p class="result">
@@ -70,6 +86,11 @@
       color: #fff;
     }
   
+    .button-row {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
     .container {
       background-color: rgba(0, 0, 0, 0.3);
       padding: 3rem;

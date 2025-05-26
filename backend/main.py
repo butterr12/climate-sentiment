@@ -5,6 +5,14 @@ from transformers import BertTokenizer, BertForSequenceClassification
 import torch
 import torch.nn.functional as F
 
+#svm ------
+from pydantic import BaseModel
+import joblib
+import numpy as np
+
+svm_model = joblib.load("svm_model/model.joblib")
+svm_vectorizer = joblib.load("svm_model/vectorizer.joblib")
+
 app = FastAPI()
 
 app.add_middleware(
@@ -20,6 +28,7 @@ app.add_middleware(
 
 class TextInput(BaseModel):
     text: str
+    model: str  # 'svm' or 'bert'
 
 tokenizer = BertTokenizer.from_pretrained("./model")
 model = BertForSequenceClassification.from_pretrained("./model", use_safetensors=True)
@@ -34,16 +43,30 @@ label_mapping = {
 @app.post("/predict")
 async def predict(input: TextInput):
     inputs = tokenizer(input.text, return_tensors="pt", truncation=True, padding=True)
+    model_choice = input.model.lower()
 
-    with torch.no_grad():
-        outputs = model(**inputs)
-        probs = F.softmax(outputs.logits, dim=-1)
-        prediction = int(torch.argmax(probs, dim=-1).item())
-        confidence = float(probs[0][prediction].item()) * 100
+    if model_choice == "svm":
+        vector = svm_vectorizer.transform([input.text])
+        pred = svm_model.predict(vector)[0]
+        confidence = np.max(svm_model.decision_function(vector))
+        label = label_mapping.get(prediction, f"LABEL_{pred}")
+        return {
+            "model": "svm",
+            "prediction": label,
+            "confidence": round(confidence, 2)
+        }
+    
+    elif model_choice == "bert":
+        with torch.no_grad():
+            outputs = model(**inputs)
+            probs = F.softmax(outputs.logits, dim=-1)
+            prediction = int(torch.argmax(probs, dim=-1).item())
+            confidence = float(probs[0][prediction].item()) * 100
 
-    label = label_mapping.get(prediction, f"LABEL_{prediction}")
+        label = label_mapping.get(prediction, f"LABEL_{prediction}")
 
-    return {
-        "prediction": label,
-        "confidence": round(confidence, 2)
-    }
+        return {
+            "model": "bert",
+            "prediction": label,
+            "confidence": round(confidence, 2)
+        }
