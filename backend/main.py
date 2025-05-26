@@ -53,7 +53,7 @@ async def predict(input: TextInput):
         pred = svm_model.predict(vector)[0]
         probs = svm_model.predict_proba(vector)[0]
         
-        confidence = np.max(probs)
+        confidence = np.max(probs) * 100
         #confidence = np.max(svm_model.decision_function(vector))
         prediction = int(pred)
         label = label_mapping.get(prediction, f"LABEL_{prediction}")
