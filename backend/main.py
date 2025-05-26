@@ -31,8 +31,11 @@ class TextInput(BaseModel):
     text: str
     model: str  # 'svm' or 'bert'
 
-tokenizer = BertTokenizer.from_pretrained("./model")
-model = BertForSequenceClassification.from_pretrained("./model", use_safetensors=True)
+# tokenizer = BertTokenizer.from_pretrained("./model")
+# model = BertForSequenceClassification.from_pretrained("./model", use_safetensors=True)
+
+tokenizer = BertTokenizer.from_pretrained("butterr12/climate-sentiment")
+model = BertForSequenceClassification.from_pretrained("butterr12/climate-sentiment", use_safetensors=True)
 model.eval()
 
 label_mapping = {
