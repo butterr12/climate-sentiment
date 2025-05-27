@@ -81,7 +81,7 @@ Goal: Use TF-IDF + Support Vector Machine to classify climate sentiment.
 
 
 
-## Approach 2: Deep Learning (Transformer - RoBERTa)
+## Approach 2: Deep Learning (Transformer - BERT-base)
 Goal: Fine-tune a pretrained RoBERTa model to classify climate sentiment.
 
 
