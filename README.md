@@ -8,7 +8,6 @@ The dataset features climate-related paragraphs sourced from financial disclosur
 # Deployment
 The project is deployed on Vercel. The dependencies needed for the web app to work is listed in requirements.txt.
 # Code Structure
-## Header 2
 ```bash
 climate-sentiment/
 ├─ backend/
