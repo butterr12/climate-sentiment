@@ -33,32 +33,49 @@ climate-sentiment/
 ## Approach 1: Traditional Machine Learning (SVM)
 Goal: Use TF-IDF + Support Vector Machine to classify climate sentiment.
 
-### Process:
-#### Preprocessing the Text
-- Lowercase all the text.
-- Remove punctuation and special characters.
-- Remove stopwords (like "the", "is", "and").
+## 📋 Preprocessing
 
-#### Feature Extraction
-- Use TF-IDF (Term Frequency-Inverse Document Frequency) to turn text into numeric vectors.
-- Set max_features (e.g., 5000 most important words).
-- Use unigrams and bigrams (single words and pairs of words).
-- Example: "climate change" becomes a bigram feature.
+- **Text Cleaning**: Remove punctuation, numbers, and special characters; normalize certain characters (e.g., curly quotes).
+- **Lowercasing**: Convert all text to lowercase.
+- **Lemmatization**: Reduce words to their base form using WordNet Lemmatizer.
+- **Stopword Removal**: Eliminate common words (e.g., "the", "and").
 
-#### Train/Test Split
-- Split labeled data into a training set and a development (dev) set (e.g., 80% train, 20% dev).
+---
 
-#### Model Training
-- Train a Support Vector Machine (SVM) classifier with a linear kernel.
-- Use GridSearchCV to find the best C value (regularization strength).
-- Example hyperparameters: C: [0.1, 1, 10]
+## 🧠 Text Vectorization
 
-#### Model Evaluation
-Predict on the dev set.
-Calculate:
-- Accuracy
-- F1-Score (macro-average, so all classes are treated equally)
-Choose the best model based on the F1 score.
+- **TF-IDF**: Convert cleaned text into numerical features based on term frequency and inverse document frequency.
+- **N-grams**: Use both unigrams and bigrams to capture more context.
+
+---
+
+## ⚖️ Handling Class Imbalance
+
+- **SMOTE**: Apply Synthetic Minority Over-sampling Technique to generate synthetic examples for minority classes.
+
+---
+
+## 🛠 Model Training (SVM)
+
+- **Algorithm**: Support Vector Machine with Linear, RBF, and Polynomial kernels.
+- **Hyperparameter Tuning**: Use grid search to optimize parameters (e.g., `C`, kernel type).
+- **Cross-Validation**: Ensure model generalization and reduce overfitting.
+
+---
+
+## 📊 Evaluation
+
+- **Metrics**: Evaluate using accuracy, precision, recall, and F1-score on the dev set.
+- **Retraining**: Retrain on combined training + dev set using best-found parameters.
+- **Final Evaluation**: Assess performance on the unseen test set.
+
+---
+
+## 🔮 Prediction
+
+- **User Input**: The final model accepts user input and outputs the predicted label with a confidence score.
+
+---
 
 
 
@@ -67,36 +84,47 @@ Choose the best model based on the F1 score.
 ## Approach 2: Deep Learning (Transformer - RoBERTa)
 Goal: Fine-tune a pretrained RoBERTa model to classify climate sentiment.
 
-#### Preprocessing the Text
-Minimal cleaning: No need to remove stopwords or punctuation.
-Keep text as natural as possible (RoBERTa handles it well).
 
-#### Load Tokenizer and Model
-Use AutoTokenizer and AutoModelForSequenceClassification from Huggingface.
-Example model: "roberta-base" (or "roberta-large" for more power).
-Tokenizer will:
-Split sentences into word pieces (subwords).
-Add [CLS] and [SEP] tokens automatically.
+## 📋 Preprocessing
 
+- **Dataset**: Loads training data from JSON and validation data from CSV.
+- **Tokenizer**: Uses `BertTokenizer` from HuggingFace to tokenize text with:
+  - Truncation and padding to a maximum length of 128.
+  - `bert-base-uncased` model for encoding text.
+- **Formatting**: Datasets are formatted into PyTorch tensors with `input_ids`, `attention_mask`, and `label`.
 
-#### Prepare Datasets
-- Tokenize the paragraphs (pad and truncate them to a max length like 256 tokens).
-- Create PyTorch Dataset and DataLoader objects for training set and dev set
+---
 
+## 🧠 Model Setup
 
-#### Model Fine-Tuning
-Fine-tune RoBERTa on the training data.
-Set training parameters (subject to change, but for now):
-- Optimizer: AdamW
-- Scheduler: linear scheduler with warmup
-- Batch size: 16
-- Epochs: 3–5
-- Learning rate: 2e-5
+- **Model**: `BertForSequenceClassification` with `bert-base-uncased` architecture.
+- **Label Handling**: Dynamically sets `num_labels` based on the unique labels in the dataset.
 
+---
 
-#### Model Evaluation
-After each epoch, evaluate on the dev set.
-Calculate:
-- Accuracy
-- F1-Score (macro-average)
-- Early stopping: If dev set F1 does not improve for 2 epochs, stop training.
+## ⚙️ Training Configuration
+
+- **Trainer API**: Uses HuggingFace's `Trainer` class.
+- **TrainingArguments**:
+  - Learning rate: `3e-5`
+  - Batch size: `8` (train & eval)
+  - Epochs: `3`
+  - Evaluation and saving after every epoch
+  - Outputs saved to `./results`
+
+---
+
+## 📊 Evaluation
+
+- **Metrics**: Accuracy and weighted F1-score computed using:
+  - `sklearn.metrics.accuracy_score`
+  - `sklearn.metrics.f1_score`
+
+---
+
+## 💾 Saving & Prediction
+
+- **Model Saving**: Automatically handled by HuggingFace's `Trainer`.
+- **Inference**: The final model can be used to predict new user inputs using the tokenizer and model pipeline.
+
+---
