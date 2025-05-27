@@ -10,18 +10,22 @@ The project is deployed on Vercel. The dependencies needed for the web app to wo
 # Code Structure
 ## Header 2
 ```bash
-# This is a code block
-echo "Hello, world!"
 climate-sentiment/
 ├─ backend/
 ├─ frontend/climate-sentiment/
-├─ notebooks/deep/
-│  ├─ sol1_deep.ipynb
-│  ├─ sol2_demo_deep.ipynb
-│  ├─ sol2_dev_deep.ipynb
-│  ├─ sol2_predictions_deep.ipynb
+├─ notebooks/
+│  ├─ deep/
+│  │  ├─ sol1_deep.ipynb
+│  │  ├─ sol2_demo_deep.ipynb
+│  │  ├─ sol2_dev_deep.ipynb
+│  │  ├─ sol2_predictions_deep.ipynb
+│  ├─ trad/
+│  │  ├─ dev_trad.ipynb
+│  │  ├─ trad_demo.ipynb
+│  │  ├─ trad_predictions.ipynb
 ├─ predictions/
 │  ├─ predictions_deep.csv
+│  ├─ predictions_trad.csv
 ├─ .gitattributes
 ├─ package-lock.json
 ├─ README.md
