@@ -5,16 +5,26 @@ This repository hosts the project of Group 3, developed as part of the requireme
 # Dataset
 The dataset features climate-related paragraphs sourced from financial disclosures, primarily from large publicly listed companies. These paragraphs have been annotated by students and researchers from the University of Zurich and Friedrich-Alexander University Erlangen-Nuremberg, specializing in finance and sustainable finance. Each paragraph is labeled as either Risk, Neutral, or Opportunity. The dataset was curated by Julia Anna Bingler, Mathias Kraus, Markus Leippold, and Nicolas Webersinke
 
+# Deployment
+The project is deployed on Vercel. The dependencies needed for the web app to work is listed in requirements.txt.
 # Code Structure
 ## Header 2
 ```bash
 # This is a code block
 echo "Hello, world!"
-cs180-nlp/
-├─ web.py
-├─ etc/
-├─ share/
-├─ models/
+climate-sentiment/
+├─ backend/
+├─ frontend/climate-sentiment/
+├─ notebooks/deep/
+│  ├─ sol1_deep.ipynb
+│  ├─ sol2_demo_deep.ipynb
+│  ├─ sol2_dev_deep.ipynb
+│  ├─ sol2_predictions_deep.ipynb
+├─ predictions/
+│  ├─ predictions_deep.csv
+├─ .gitattributes
+├─ package-lock.json
+├─ README.md
 ```
 # Methodology
 ## Approach 1: Traditional Machine Learning (SVM)
