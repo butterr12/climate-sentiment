@@ -57,8 +57,6 @@ Calculate:
 - F1-Score (macro-average, so all classes are treated equally)
 Choose the best model based on the F1 score.
 
-#### Future Notes
-Save the trained SVM model (.pkl) and TF-IDF vectorizer. These will be needed for the demo code later.
 
 
 
@@ -99,6 +97,3 @@ Calculate:
 - Accuracy
 - F1-Score (macro-average)
 - Early stopping: If dev set F1 does not improve for 2 epochs, stop training.
-
-Future Notes (similar with traditional approach)
-Save the fine-tuned RoBERTa model and tokenizer for demo code.
